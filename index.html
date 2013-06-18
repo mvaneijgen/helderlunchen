@@ -25,7 +25,7 @@
     <img src="img/profiel.png">
     
     <h1>Vincent Stolk</h1>
-    <table border="1">
+    <table border="2">
       <tr>
         <td>Maisbrood</td>
         <td>x 4</td>
@@ -59,11 +59,11 @@
 
     <div id="container" class="transitions-enabled clearfix">
 
-      <div class="item maisbrood col2">
+      <div class="item maisbrood col2" >
         <img src="img/food_maisbrood.png">
         <section>
           <h1>Maisbrood</h1>
-          <input type='number' value="0" min="0" max="9">          
+          <input type='number' value="0" min="0" max="9" data-quantityPerUnit="25">          
         </section>
       </div>
 
@@ -71,7 +71,7 @@
         <img src="img/food_ei.png">
         <section>
           <h1>Ei</h1>
-          <input type='number' value="0" min="0" max="9">          
+          <input type='number' value="0" min="0" max="9" data-quantityPerUnit="6">          
         </section>
       </div>
 
@@ -79,7 +79,7 @@
         <img src="img/food_geitenkaas.png">
         <section>
           <h1>Geitenkaas</h1>
-          <input type='number' value="0" min="0" max="9">
+          <input type='number' value="0" min="0" max="9" data-quantityPerUnit="6">
         </section>
       </div>
       
@@ -87,7 +87,7 @@
         <img src="img/food_bruinbrood.png">
         <section>
           <h1>Bruinbrood</h1>
-          <input type='number' value="0" min="0" max="9">          
+          <input type='number' value="0" min="0" max="9" data-quantityPerUnit="25">          
         </section>
       </div>
 
@@ -95,7 +95,7 @@
         <img src="img/food_appelstroop.png">
         <section>
           <h1>Appel stroop</h1>
-          <input type='number' value="0" min="0" max="9">          
+          <input type='number' value="0" min="0" max="9" data-quantityPerUnit="55">          
         </section>
       </div>
 
@@ -103,7 +103,7 @@
         <img src="img/food_kaas.png">
         <section>
           <h1>Kaas</h1>
-          <input type='number' value="0" min="0" max="9">
+          <input type='number' value="0" min="0" max="9" data-quantityPerUnit="12">
         </section>
       </div>
 
@@ -111,7 +111,7 @@
         <img src="img/food_jam.png">
         <section>
           <h1>Jam</h1>
-          <input type='number' value="0" min="0" max="9">
+          <input type='number' value="0" min="0" max="9" data-quantityPerUnit="55">
         </section>
       </div>
 
@@ -119,7 +119,7 @@
         <img src="img/food_avocado.png">
         <section>
           <h1>Avocado</h1>
-          <input type='number' value="0" min="0" max="9">
+          <input type='number' value="0" min="0" max="9" data-quantityPerUnit="4">
         </section>
       </div>
 
@@ -127,7 +127,7 @@
         <img src="img/food_eiersalade.png">
         <section>
           <h1>Eier salade</h1>
-          <input type='number' value="0" min="0" max="9">
+          <input type='number' value="0" min="0" max="9" data-quantityPerUnit="10">
         </section>
       </div>
 
@@ -135,7 +135,7 @@
         <img src="img/food_pindakaas.png">
         <section>
           <h1>Pindakaas</h1>
-          <input type='number' value="0" min="0" max="9">
+          <input type='number' value="0" min="0" max="9" data-quantityPerUnit="55">
         </section>
       </div>
 
@@ -143,16 +143,7 @@
         <img src="img/food_honing.png">
         <section>
           <h1>Honing</h1>
-          <input type='number' value="0" min="0" max="9">          
-        </section>
-      </div>
-
-      <div class="item jam col1">
-        <img src="img/food_jam.png">
-        <section>
-          <h1>Jam</h1>
-          <input type='number' value="0" min="0" max="9">
-          
+          <input type='number' value="0" min="0" max="9" data-quantityPerUnit="80">          
         </section>
       </div>
 
@@ -160,7 +151,7 @@
         <img src="img/food_ossenworst.png">
         <section>
           <h1>Ossenworst</h1>
-          <input type='number' value="0" min="0" max="9">
+          <input type='number' value="0" min="0" max="9" data-quantityPerUnit="12">
         </section>
       </div>
 
@@ -168,7 +159,7 @@
         <img src="img/food_makreel.png">
         <section>
           <h1>Makreel</h1>
-          <input type='number' value="0" min="0" max="9">
+          <input type='number' value="0" min="0" max="9" data-quantityPerUnit="14">
         </section>
       </div>
 
@@ -176,7 +167,7 @@
         <img src="img/food_mayo.png">
         <section>
           <h1>Mayo</h1>
-          <input type='number' value="0" min="0" max="9">
+          <input type='number' value="0" min="0" max="9" data-quantityPerUnit="35">
         </section>
       </div>
 
@@ -192,6 +183,7 @@
     <script src="js/jquery.masonry.js"></script>
     <script src="js/items.js"></script>
     <script>
+    window.onload = function(){
     $(function(){
 
       var $container = $('#container');
@@ -217,6 +209,7 @@
 
     
   });
+  };
     </script>
         
 
