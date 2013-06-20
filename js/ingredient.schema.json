@@ -1,0 +1,113 @@
+[{
+	"name":"maisbrood",
+	"title":"Maisbrood",
+	"type":"number",
+	"col":2,
+	"min":0,
+	"max":9,
+	"quantityPerUnit":25
+},{
+	"name":"ei",
+	"title":"Ei",
+	"type":"number",
+	"col":1,
+	"min":0,
+	"max":9,
+	"quantityPerUnit":6
+},{
+	"name":"geitenkaas",
+	"title":"Geitenkaas",
+	"type":"number",
+	"col":1,
+	"min":0,
+	"max":9,
+	"quantityPerUnit":6
+},{
+	"name":"bruinbrood",
+	"title":"Bruinbrood",
+	"type":"number",
+	"col":2,
+	"min":0,
+	"max":9,
+	"quantityPerUnit":25
+},{
+	"name":"appelstroop",
+	"title":"Appelstroop",
+	"type":"number",
+	"col":2,
+	"min":0,
+	"max":9,
+	"quantityPerUnit":55
+},{
+	"name":"kaas",
+	"title":"Kaas",
+	"type":"number",
+	"col":2,
+	"min":0,
+	"max":9,
+	"quantityPerUnit":12
+},{
+	"name":"jam",
+	"title":"Jam",
+	"type":"number",
+	"col":1,
+	"min":0,
+	"max":9,
+	"quantityPerUnit":55
+},{
+	"name":"avocado",
+	"title":"Avocado",
+	"type":"number",
+	"col":1,
+	"min":0,
+	"max":9,
+	"quantityPerUnit":4
+},{
+	"name":"eiersalade",
+	"title":"Eiersalade",
+	"type":"number",
+	"col":1,
+	"min":0,
+	"max":9,
+	"quantityPerUnit":10
+},{
+	"name":"pindakaas",
+	"title":"Pindakaas",
+	"type":"number",
+	"col":2,
+	"min":0,
+	"max":9,
+	"quantityPerUnit":55
+},{
+	"name":"honing",
+	"title":"Honing",
+	"type":"number",
+	"col":1,
+	"min":0,
+	"max":9,
+	"quantityPerUnit":80
+},{
+	"name":"ossenworst",
+	"title":"Ossenworst",
+	"type":"number",
+	"col":1,
+	"min":0,
+	"max":9,
+	"quantityPerUnit":12
+},{
+	"name":"makreel",
+	"title":"Makreel",
+	"type":"number",
+	"col":1,
+	"min":0,
+	"max":9,
+	"quantityPerUnit":14
+},{
+	"name":"mayo",
+	"title":"Mayo",
+	"type":"number",
+	"col":1,
+	"min":0,
+	"max":9,
+	"quantityPerUnit":35
+}]
