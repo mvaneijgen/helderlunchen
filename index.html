@@ -8,10 +8,13 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <!--[if lt IE 9]><script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
 
-  
+  <style>
+  .dijitDialogTitle {color:#000};
+  </style>
   
   <link rel="stylesheet" href="css/style.css" />
   <link rel="stylesheet" href="css/app.css" />
+  <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/dojo/1.9.0/dijit/themes/tundra/tundra.css" />
   
   <script src="js/modernizr-transitions.js"></script>
   <script src="//ajax.googleapis.com/ajax/libs/dojo/1.9.0/dojo/dojo.js" data-dojo-config="async:true,packages:[{
@@ -25,7 +28,7 @@
   <!-- scripts at bottom of page -->
 
 </head>
-<body class="homepage ">
+<body class="homepage tundra">
 	<nav id="site-nav"></nav> <!-- #site-nav -->
 	<section id="content">
 
@@ -37,7 +40,7 @@
     <footer id="site-footer">
       Helder lunchen <img src="img/logo.png"><a href="http://mvaneijgen.nl"> mvaneijgen</a>
     </footer>
-	
+    
     <script src="js/jquery-1.7.1.min.js"></script>
     <script src="js/jquery.masonry.js"></script>
     <script src="js/items.js"></script>
@@ -45,49 +48,32 @@
 	require([
 	    "dojo/ready",
 	    "dojo/hash",
+	    "dojo/topic",
 	    "dojo/dom-construct",
 	    "dojo/json",
+	    "dojo/_base/xhr",
 	    "dojo/store/JsonRest",
+	    "dijit/Dialog",
 	    "mustache/mustache",
 	    "dojo/text!./templates/person.html",
 	    "dojo/text!./templates/ingredient.html",
-	    "dojo/text!./js/ingredient.schema.json",
-	    "dlagua/c/string/toProperCase"
-	],function(ready,hash,domConstruct,JSON,JsonRest,mustache,personTemplate,ingredientTemplate,ingredientSchema){
+	    "dojo/text!./templates/login.html",
+	    "dojo/text!./js/ingredient.schema.json"
+	],function(ready,hash,topic,domConstruct,JSON,xhr,JsonRest,Dialog,mustache,personTemplate,ingredientTemplate,loginTemplate,ingredientSchema){
 		var byId = function(id){
 			return document.getElementById(id);
 		};
 		ready(function(){
-			$(function(){
-				var $container = $('#container');
-			
-				$('#mini-container').masonry({
-				  columnWidth: 50
-				});
-			
-				$container.masonry({
-				  itemSelector: '.item',
-				  columnWidth: 240,
-				  isAnimated: !Modernizr.csstransitions
-				});
-			
-			  // Sites using Masonry markup
-			  var $sites = $('#sites'),
-			  $loadingItem = $container.find('.loading');
-			
-			  var ajaxError = function(){
-				$loadingItem.text('Could not load examples :(');
-			  };
-			});
-			
 			/* ---- store stuff ---- */
 			var ingredient_schema = JSON.parse(ingredientSchema);
 			
 			var store = new JsonRest({
 				target:"/persvr/Person/"
 			});
-			var name = hash();
+			// person holder
 			var person;
+			
+			// data functions
 			var updateIngredients = function(){
 				byId("ingredients").innerHTML = "";
 				ingredient_schema.forEach(function(_){
@@ -98,29 +84,115 @@
 					}
 				});
 			}
-			// query store
-			var q = name ? "?firstname="+name.toProperCase() : "";
-			store.query(q).then(function(items){
-				person = items[0];
-				byId("site-nav").innerHTML = mustache.to_html(personTemplate,person);
-				ingredient_schema.forEach(function(_){
-					_.value = person.ingredients[_.name] || 0;
-					var item = domConstruct.create("div",{
-						innerHTML:mustache.to_html(ingredientTemplate,_),
-						"class":"item "+_.name+" col"+_.col
-					},"container");
-					$('input',item).bind('change', function(evt){
-						var name = evt.target.name;
-						var value = parseInt(evt.target.value,10);
-						person.ingredients[name] = value;
-						ingredient_schema.forEach(function(_){
-							_.value = person.ingredients[_.name] || 0;
-						});
-						updateIngredients();
+			var auth = function(person){
+				var dialog = new Dialog({
+					title:"Login",
+					content:loginTemplate
+				});
+				dialog.startup();
+				dialog.show();
+				$("button",dialog.containerNode).bind("click",function(evt){
+					var expires = new Date(new Date().getTime() + 120*60000);
+					var input = $("input",dialog.containerNode);
+					var params = {};
+					input.each(function(i,_){
+						params[_.name] = _.value;
+					});
+					dialog.hide();
+					xhr("POST", {
+						url: store.target + person.id,
+						handleAs: "json",
+						postData:JSON.stringify({
+							id:"call-id",
+							method:"authenticate",
+							params:[person.user,params.password,expires]
+						}),
+						headers: {
+							"accept":"application/json",
+							"content-type":"application/json"
+						}
+					}).then(function(){
+						person.password = params.password;
+						save(person);
+					},function(){
+						alert("Helaas, er ging iets mis...");
 					});
 				});
-				updateIngredients();
-			});
+			}
+			var getList = function(){
+				var totals = {};
+				ingredient_schema.forEach(function(_){
+					 totals[_.name] = 0
+				});
+				store.query().then(function(items){
+					items.forEach(function(person){
+						person.ingredient_schema = ingredient_schema.map(function(_){
+							_.value = person.ingredients[_.name] || 0;
+							totals[_.name] += _.value;
+						});
+					});
+				});
+				console.log(totals)
+				var units = {};
+				ingredient_schema.forEach(function(_){
+					units[_.name] = Math.ceil(totals[_.name]/_.quantityPerUnit);
+				});
+				console.log(units)
+			};
+			var save = function(person){
+				if(!person.password) {
+					auth(person);
+					return;
+				}
+				store.put(person).then(function(){
+					alert("Lunch opgeslagen!");
+					getList();
+				},function(){
+					auth(person);
+				});
+			};
+			// query store
+			var doQuery = function(user){
+				var q = user ? "?user="+user : "";
+				store.query(q).then(function(items){
+					person = items[0];
+					var nav = byId("site-nav");
+					nav.innerHTML = mustache.to_html(personTemplate,person);
+					$("button",nav).bind("click", function(evt){
+						save(person);
+					});
+					ingredient_schema.forEach(function(_){
+						_.value = person.ingredients[_.name] || 0;
+						var item = domConstruct.create("div",{
+							innerHTML:mustache.to_html(ingredientTemplate,_),
+							"class":"item "+_.name+" col"+_.col
+						},"container");
+						$('input',item).bind('change', function(evt){
+							var name = evt.target.name;
+							var value = parseInt(evt.target.value,10);
+							person.ingredients[name] = value;
+							ingredient_schema.forEach(function(_){
+								_.value = person.ingredients[_.name] || 0;
+							});
+							updateIngredients();
+						});
+					});
+					setTimeout(function(){
+						$('#container').masonry({
+							itemSelector: '.item',
+							columnWidth: 240,
+							isAnimated: !Modernizr.csstransitions
+						});
+					},10);
+					updateIngredients();
+				});
+			};
+			
+			// hash router
+			topic.subscribe("/dojo/hashchange",doQuery);
+			
+			// load current hash
+			doQuery(hash());
 		});
 	});
     </script>
