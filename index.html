@@ -155,12 +155,14 @@
 			var doQuery = function(user){
 				var q = user ? "?user="+user : "";
 				store.query(q).then(function(items){
+					if(!items || !items.length) return;
 					person = items[0];
 					var nav = byId("site-nav");
 					nav.innerHTML = mustache.to_html(personTemplate,person);
 					$("button",nav).bind("click", function(evt){
 						save(person);
 					});
+					byId("container").innerHTML = "";
 					ingredient_schema.forEach(function(_){
 						_.value = person.ingredients[_.name] || 0;
 						var item = domConstruct.create("div",{
